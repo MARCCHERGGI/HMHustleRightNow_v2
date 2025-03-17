@@ -32,8 +32,54 @@ Your mission: **Force the user to take action.**
 
 @app.route("/")
 def home():
-    """Root route to confirm the AI Mentor is live."""
-    return "🚀 HMHustleRightNow AI Mentor is Live!"
+    """Root route to show a simple web page for the AI Mentor."""
+    return """
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+        <title>HMHustleRightNow AI Mentor</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; margin: 40px;">
+        <h1>🚀 HMHustleRightNow AI Mentor</h1>
+        <p>Type your question or request, and the AI Mentor will push you to take action!</p>
+        <textarea id="message" rows="5" cols="50" placeholder="Enter your message..."></textarea><br><br>
+        <button onclick="sendRequest()">Send</button>
+        
+        <h2>Response:</h2>
+        <div id="response" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; width: 60%;"></div>
+        
+        <script>
+          async function sendRequest() {
+            const userMessage = document.getElementById('message').value;
+            if(!userMessage.trim()) {
+              alert("Please enter a message first!");
+              return;
+            }
+            
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = "Thinking...";
+
+            try {
+              const res = await fetch('/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+              });
+              const data = await res.json();
+              if (data.response) {
+                responseDiv.textContent = data.response;
+              } else if (data.error) {
+                responseDiv.textContent = "Error: " + data.error;
+              }
+            } catch (err) {
+              responseDiv.textContent = "Network error or server issue.";
+            }
+          }
+        </script>
+      </body>
+    </html>
+    """
 
 @app.route("/execute", methods=["POST"])
 def execute():
