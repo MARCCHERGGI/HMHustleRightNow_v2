@@ -35,20 +35,70 @@ def home():
     """Root route to show a simple web page for the AI Mentor."""
     return """
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
         <meta charset="UTF-8" />
+        <!-- Make it responsive on mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HMHustleRightNow AI Mentor</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f5f5f5;
+          }
+          .container {
+            max-width: 600px; 
+            margin: 40px auto; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          }
+          h1 {
+            margin-bottom: 0.5rem;
+          }
+          textarea {
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 4px; 
+            border: 1px solid #ccc;
+          }
+          button {
+            background: #7e57c2; 
+            color: #fff; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            margin-top: 10px;
+          }
+          button:hover {
+            background: #6d4ead;
+          }
+          #response {
+            margin-top: 1rem; 
+            white-space: pre-wrap; 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            border-radius: 4px;
+            min-height: 50px;
+            background-color: #fafafa;
+          }
+        </style>
       </head>
-      <body style="font-family: Arial, sans-serif; margin: 40px;">
-        <h1>🚀 HMHustleRightNow AI Mentor</h1>
-        <p>Type your question or request, and the AI Mentor will push you to take action!</p>
-        <textarea id="message" rows="5" cols="50" placeholder="Enter your message..."></textarea><br><br>
-        <button onclick="sendRequest()">Send</button>
-        
-        <h2>Response:</h2>
-        <div id="response" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; width: 60%;"></div>
-        
+      <body>
+        <div class="container">
+          <h1>🚀 HMHustleRightNow AI Mentor</h1>
+          <p>Type your question or request, and the AI Mentor will push you to take action!</p>
+          <textarea id="message" rows="5" placeholder="Enter your message..."></textarea><br><br>
+          <button onclick="sendRequest()">Send</button>
+          
+          <h2>Response:</h2>
+          <div id="response"></div>
+        </div>
+
         <script>
           async function sendRequest() {
             const userMessage = document.getElementById('message').value;
@@ -99,7 +149,6 @@ def execute():
                 {"role": "user", "content": user_input}
             ]
         )
-        # Extract AI's response
         ai_response = response.choices[0].message.content.strip()
 
         # Log request & response
